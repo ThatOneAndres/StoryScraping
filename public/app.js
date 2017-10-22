@@ -40,4 +40,14 @@ $(document).ready(function(){
             }
         })
     })
+
+    $(".scrape").on("click",function(e){
+        $.get("/scrape",function(msg){
+            if (msg === "Saved"){
+                console.log("Success");
+            }else{
+                console.log(msg);
+            }
+        })
+    })
 })

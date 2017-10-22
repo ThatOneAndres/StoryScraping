@@ -12,6 +12,12 @@ $.getJSON("/api/save", function(data) {
       var cardText = $("<div class = 'card-text'/>");
       var cardLink1 = $("<a class = 'card-link'/>");
       var cardLink2 = $("<a class = 'card-link remove'/>");
+      var viewComments = $("<button class='btn btn-primary btn-sm' type='button' data-toggle='collapse' data-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample'/>");
+      var comments = $("<div class = 'collapse' id = 'collapseExample'/>");
+      var addComments = $("<button class='btn btn-primary btn-sm addToggle'/>")
+      var addForm = $("<form style = 'display: none'/>")
+      var formContent = $("<form-group/>");
+      var formButton = $('<button class ="btn btn-primary comment-submit"/>').text("Add");
       cardTitle.text(data[i].title);
       cardText.text(data[i].summary);
       cardLink1.text("Read more...");
@@ -20,12 +26,37 @@ $.getJSON("/api/save", function(data) {
       cardLink2.text("Remove");
       cardLink2.attr("href","#");
       cardLink2.data("info", data[i]);
+      // View Comments
+      viewComments.text("View Comments");
+      for (var j = 0; j < data[i].note.length; j++){
+          var comment = $("<div class = 'card card-body'/>");
+          var header = $("<h4/>").text(data[i].notes[j].title);
+          var body = $("<p/>").text(data[i].notes[j].body);
+          comment.append(header);
+          comment.append(body);
+          comments.append(comment);
+      }
+      // Add Comment
+      addComments.text("Add Comment");
+      formContent.append($("<div/>").text("Heading"));
+      formContent.append($('<input type="text" class="form-control" id="commentTitle"/>'));
+      formContent.append($('<div for="comment"/>').text("Comment"));
+      formContent.append($('<textarea class="form-control" id="comment" rows="3"></textarea>'));
+      formButton.data("id", data[i]._id);
+      formContent.append(formButton);
+      addForm.append(formContent);
+
       cardBlock.append(cardTitle);
       cardBlock.append(cardText);
       cardBlock.append(cardLink1);
       cardBlock.append(cardLink2);
+      cardBlock.append(viewComments);
+      cardBlock.append(addComments);
+      cardBlock.append(comments);
       card.append(cardBlock);
+      console.log(card);
       $(".saved").append(card);
+      $(".saved").append(addForm);
     }
   });
 
@@ -44,5 +75,23 @@ $(document).ready(function(){
                 console.log(msg);
             }
         });
+    })
+
+    $(".addToggle").on("click", function(e){
+        e.preventDefault();
+        if ($($(this)[0].parentElement.parentElement.nextSibling).css("display") === "none"){
+            $($(this)[0].parentElement.parentElement.nextSibling).css("display", "block");
+        }else{
+            $($(this)[0].parentElement.parentElement.nextSibling).css("display", "none");
+        }
+    })
+
+    $(".comment-submit").on("click", function(e){
+        e.preventDefault();
+        console.log($(this)[0].parentElement.childNodes[1]);
+        console.log($(this)[0].parentElement.childNodes[4]);
+        var heading = $($(this)[0].parentElement.childNodes[1]).val().trim();
+        var comment = $($(this)[0].parentElement.childNodes[4]).val().trim()
+        console.log(heading,comment);
     })
 })

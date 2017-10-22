@@ -110,6 +110,7 @@ app.get("/articles", function(req, res) {
         // Grab every document in the Save collection
         db.Save
         .find({})
+        .populate("note")
         .then(function(dbSave) {
             // If we were able to successfully find Save, send them back to the client
             res.json(dbSave);
@@ -130,6 +131,7 @@ app.get("/articles", function(req, res) {
             res.json(err);
         })
     })
+
 
 
   // Start the server
