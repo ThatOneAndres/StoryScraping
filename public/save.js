@@ -12,8 +12,8 @@ $.getJSON("/api/save", function(data) {
       var cardText = $("<div class = 'card-text'/>");
       var cardLink1 = $("<a class = 'card-link'/>");
       var cardLink2 = $("<a class = 'card-link remove'/>");
-      var viewComments = $("<button class='btn btn-primary btn-sm' type='button' data-toggle='collapse' data-target='#collapseExample' aria-expanded='false' aria-controls='collapseExample'/>");
-      var comments = $("<div class = 'collapse' id = 'collapseExample'/>");
+      var viewComments = $("<button class='btn btn-primary btn-sm' type='button' data-toggle='collapse' aria-expanded='false' aria-controls='collapseExample'/>");
+      var comments = $("<div class = 'collapse'/>");
       var addComments = $("<button class='btn btn-primary btn-sm addToggle'/>")
       var addForm = $("<form style = 'display: none'/>")
       var formContent = $("<form-group/>");
@@ -28,10 +28,12 @@ $.getJSON("/api/save", function(data) {
       cardLink2.data("info", data[i]);
       // View Comments
       viewComments.text("View Comments");
+      viewComments.attr("data-target","#collapseExample"+i);
+      comments.attr("id","collapseExample"+i)
       for (var j = 0; j < data[i].note.length; j++){
           var comment = $("<div class = 'card card-body'/>");
-          var header = $("<h4/>").text(data[i].notes[j].title);
-          var body = $("<p/>").text(data[i].notes[j].body);
+          var header = $("<h4/>").text(data[i].note[j].title);
+          var body = $("<p/>").text(data[i].note[j].body);
           comment.append(header);
           comment.append(body);
           comments.append(comment);
@@ -91,7 +93,13 @@ $(document).ready(function(){
         console.log($(this)[0].parentElement.childNodes[1]);
         console.log($(this)[0].parentElement.childNodes[4]);
         var heading = $($(this)[0].parentElement.childNodes[1]).val().trim();
-        var comment = $($(this)[0].parentElement.childNodes[4]).val().trim()
-        console.log(heading,comment);
+        var comment = $($(this)[0].parentElement.childNodes[4]).val().trim();
+        var commObj = {title: heading, body: comment};
+        var articleID = $(this).data("id");
+        console.log(heading,comment,articleID);
+        var url = "/save/"+articleID;
+        $.post(url,commObj,function(data){
+            console.log(data);
+        });
     })
 })

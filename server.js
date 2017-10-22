@@ -130,7 +130,29 @@ app.get("/articles", function(req, res) {
         .catch(function(err){
             res.json(err);
         })
-    })
+    });
+
+    // Route for saving/updating an Article's associated Note
+app.post("/save/:id", function(req, res) {
+    // Create a new note and pass the req.body to the entry
+    db.Note
+      .create({
+          title: req.body.title,
+          body: req.body.body
+      })
+      .then(function(dbNote) {
+
+        return db.Save.findOneAndUpdate({ _id: req.params.id }, { $push: {note: dbNote._id} }, { new: true });
+      })
+      .then(function(dbSave) {
+        // If we were able to successfully update an Save, send it back to the client
+        res.json(dbSave);
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
 
 
 
