@@ -1,12 +1,10 @@
 // Grab the articles as a json
 $.getJSON("/api/save", function(data) {
     // For each one
-    console.log(data);
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
 
       var card = $("<div class = 'card'/>");
-      console.log(card);
       var cardBlock = $("<div class = 'card-block'/>");
       var cardTitle = $("<div class = 'card-title'/>");
       var cardText = $("<div class = 'card-text'/>");
@@ -56,7 +54,6 @@ $.getJSON("/api/save", function(data) {
       cardBlock.append(addComments);
       cardBlock.append(comments);
       card.append(cardBlock);
-      console.log(card);
       $(".saved").append(card);
       $(".saved").append(addForm);
     }
@@ -89,7 +86,6 @@ $(document).ready(function(){
     })
 
     $(".comment-submit").on("click", function(e){
-        e.preventDefault();
         console.log($(this)[0].parentElement.childNodes[1]);
         console.log($(this)[0].parentElement.childNodes[4]);
         var heading = $($(this)[0].parentElement.childNodes[1]).val().trim();
