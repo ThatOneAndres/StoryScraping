@@ -1,6 +1,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var path = require("path");
 
 // Our scraping tools
 // It works on the client and on the server
@@ -85,6 +86,50 @@ app.get("/articles", function(req, res) {
         res.json(err);
       });
   });
+
+  app.get("/save", function(req, res) {
+        console.log(path.resolve(__dirname + "/public/saved.html"));
+         res.sendFile(path.resolve(__dirname + "/public/saved.html"));
+    });
+
+  // Route for add Saved articles to db
+  app.post("/api/save", function(req,res){
+      console.log(req.body)
+      db.Save
+      .create(req.body)
+      .then(function(dbSave){
+          res.send("Saved")
+      })
+      .catch(function(err){
+          res.json(err);
+      })
+  })
+
+    // Route for getting all Save from the db
+    app.get("/api/save", function(req, res) {
+        // Grab every document in the Save collection
+        db.Save
+        .find({})
+        .then(function(dbSave) {
+            // If we were able to successfully find Save, send them back to the client
+            res.json(dbSave);
+        })
+        .catch(function(err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+    });
+
+    app.delete("/api/save", function(req, res){
+        db.Save
+        .remove(req.body)
+        .then(function(dbSave){
+            res.send("Saved")
+        })
+        .catch(function(err){
+            res.json(err);
+        })
+    })
 
 
   // Start the server
