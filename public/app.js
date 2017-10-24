@@ -43,7 +43,8 @@ $(document).ready(function(){
 
     $(".scrape").on("click",function(e){
         $.get("/scrape",function(msg){
-            if (msg === "Saved"){
+            if (msg === "Scrape Complete"){
+                window.location.reload(true);
                 console.log("Success");
             }else{
                 console.log(msg);
