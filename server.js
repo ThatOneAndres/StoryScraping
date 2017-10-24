@@ -127,6 +127,7 @@ app.get("/articles", function(req, res) {
     });
 
     app.delete("/api/save", function(req, res){
+        console.log(req.body);
         db.Save
         .remove(req.body)
         .then(function(dbSave){
@@ -136,6 +137,26 @@ app.get("/articles", function(req, res) {
             res.json(err);
         })
     });
+
+
+    app.delete("/api/comment", function(req,res){
+        console.log(req.body);
+        db.Note
+        .remove(req.body)
+        .then(function(dbNote){
+            console.log(db.Save.note);
+           return db.Save.pull(req.body._id);
+        })
+        .then(function(dbSave) {
+            // If we were able to successfully update an Save, send it back to the client
+            res.json(dbSave);
+          })
+          .catch(function(err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+          });
+        
+    })
 
     // Route for saving/updating an Article's associated Note
 app.post("/save/:id", function(req, res) {

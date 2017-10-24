@@ -31,6 +31,8 @@ $.getJSON("/api/save", function(data) {
       for (var j = 0; j < data[i].note.length; j++){
           var comment = $("<div class = 'card card-body'/>");
           var header = $("<h4/>").text(data[i].note[j].title);
+          header.data("comment-id",data[i].note[j]);
+          header.html(data[i].note[j].title + "<button type='button' class='btn btn-danger pull-right btn-sm delete'> <i class='fa fa-trash' aria-hidden='true'></i></button>")
           var body = $("<p/>").text(data[i].note[j].body);
           comment.append(header);
           comment.append(body);
@@ -73,6 +75,15 @@ $(document).ready(function(){
             }else{
                 console.log(msg);
             }
+        });
+    })
+    $(".delete").on("click", function(e){
+        $.ajax({
+            url:"/api/comment",
+            type:"DELETE",
+            data:$($(this)[0].parentNode).data("comment-id")
+        }).done(function(msg){
+            console.log(msg)
         });
     })
 
