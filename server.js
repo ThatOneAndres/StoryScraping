@@ -129,7 +129,7 @@ app.get("/articles", function(req, res) {
     app.delete("/api/save", function(req, res){
         console.log(req.body);
         db.Save
-        .remove(req.body)
+        .remove({_id: req.body._id})
         .then(function(dbSave){
             res.send("Saved")
         })
@@ -144,7 +144,7 @@ app.get("/articles", function(req, res) {
         db.Note
         .remove(req.body)
         .then(function(dbNote){
-            console.log(db.Save.note);
+            console.log(db.Save);
            return db.Save.pull(req.body._id);
         })
         .then(function(dbSave) {

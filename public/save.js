@@ -89,6 +89,7 @@ $(document).ready(function(){
 
     $(".addToggle").on("click", function(e){
         e.preventDefault();
+        console.log($($(this)[0].parentElement.parentElement.nextSibling).css("display"));
         if ($($(this)[0].parentElement.parentElement.nextSibling).css("display") === "none"){
             $($(this)[0].parentElement.parentElement.nextSibling).css("display", "block");
         }else{
