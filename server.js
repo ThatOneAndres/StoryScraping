@@ -39,40 +39,79 @@ app.get("/scrape", function(req, res) {
     request("https://www.latimes.com/local/lanow/", function(error, response, html) {
       if (error) throw error;
       // Load the html body from request into cheerio
-      mongoose.connection.db.dropCollection("articles",function(err,result){
-          if (err) throw err;
-          var $ = cheerio.load(html);
-          // For each element with a "title" class
-          $(".trb_blogroll_post").each(function(i, element) {
-            // Save an empty result object
-            var result = {};
-    
-            // Save the text and href of each link enclosed in the current element
-            var title = $(element).children(".trb_blogroll_post_title").text();
-            var summary = $(element).children(".trb_blogroll_post_description").text();
-            var link = $(element).children(".trb_blogroll_post_description").children("a").attr("href");
-      
-            result.title = title;
-            result.summary = summary.replace("Read more","").trim();
-            result.link = "http://www.latimes.com" + link;
-            console.log(result);
-    
-            // If this found element had both a title and a link
-            if (title && link && summary) {
-                // Create a new Article using the `result` object built from scraping
-                db.Article
-                .create(result)
-                .then(function(dbArticle) {
-                    // If we were able to successfully scrape and save an Article, send a message to the client
-                    res.send("Scrape Complete");
-                })
-                .catch(function(err) {
-                    // If an error occurred, send it to the client
-                    res.json(err);
+      mongoose.connection.db.listCollections({
+        name: 'articles'
+    }).next(function (err, collinfo) {
+        if (collinfo) {
+            mongoose.connection.db.dropCollection("articles",function(err,result){
+                if (err) throw err;
+                var $ = cheerio.load(html);
+                // For each element with a "title" class
+                $(".trb_blogroll_post").each(function(i, element) {
+                  // Save an empty result object
+                  var result = {};
+          
+                  // Save the text and href of each link enclosed in the current element
+                  var title = $(element).children(".trb_blogroll_post_title").text();
+                  var summary = $(element).children(".trb_blogroll_post_description").text();
+                  var link = $(element).children(".trb_blogroll_post_description").children("a").attr("href");
+            
+                  result.title = title;
+                  result.summary = summary.replace("Read more","").trim();
+                  result.link = "http://www.latimes.com" + link;
+                  console.log(result);
+          
+                  // If this found element had both a title and a link
+                  if (title && link && summary) {
+                      // Create a new Article using the `result` object built from scraping
+                      db.Article
+                      .create(result)
+                      .then(function(dbArticle) {
+                          // If we were able to successfully scrape and save an Article, send a message to the client
+                          res.send("Scrape Complete");
+                      })
+                      .catch(function(err) {
+                          // If an error occurred, send it to the client
+                          res.json(err);
+                      });
+                  }
                 });
-            }
-          });
-      });
+            });
+        } else{
+            var $ = cheerio.load(html);
+            // For each element with a "title" class
+            $(".trb_blogroll_post").each(function(i, element) {
+              // Save an empty result object
+              var result = {};
+      
+              // Save the text and href of each link enclosed in the current element
+              var title = $(element).children(".trb_blogroll_post_title").text();
+              var summary = $(element).children(".trb_blogroll_post_description").text();
+              var link = $(element).children(".trb_blogroll_post_description").children("a").attr("href");
+        
+              result.title = title;
+              result.summary = summary.replace("Read more","").trim();
+              result.link = "http://www.latimes.com" + link;
+              console.log(result);
+      
+              // If this found element had both a title and a link
+              if (title && link && summary) {
+                  // Create a new Article using the `result` object built from scraping
+                  db.Article
+                  .create(result)
+                  .then(function(dbArticle) {
+                      // If we were able to successfully scrape and save an Article, send a message to the client
+                      res.send("Scrape Complete");
+                  })
+                  .catch(function(err) {
+                      // If an error occurred, send it to the client
+                      res.json(err);
+                  });
+              }
+            });
+        }
+    });
+
 
     });
   });
@@ -93,7 +132,6 @@ app.get("/articles", function(req, res) {
   });
 
   app.get("/save", function(req, res) {
-        console.log(path.resolve(__dirname + "/public/saved.html"));
          res.sendFile(path.resolve(__dirname + "/public/saved.html"));
     });
 
