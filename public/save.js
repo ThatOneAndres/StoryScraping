@@ -59,10 +59,6 @@ $.getJSON("/api/save", function(data) {
       $(".saved").append(card);
       $(".saved").append(addForm);
     }
-  });
-
-
-$(document).ready(function(){
     $(".remove").on("click",function(e){
         $.ajax({
             url: "/api/save",
@@ -110,4 +106,9 @@ $(document).ready(function(){
             console.log(data);
         });
     })
-})
+  });
+
+
+// $(document).ready(function(){
+
+// })
