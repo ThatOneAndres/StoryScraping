@@ -26,11 +26,6 @@ $.getJSON("/articles", function(data) {
       card.append(cardBlock);
       $(".articles").append(card);
     }
-  });
-
-
-
-$(document).ready(function(){
     $(".save").on("click",function(e){
         $.post("/api/save",$(this).data("info"),function(msg){
             if (msg === "Saved"){
@@ -39,8 +34,12 @@ $(document).ready(function(){
                 console.log(msg);
             }
         })
-    })
+    });
+  });
 
+
+
+$(document).ready(function(){
     $(".scrape").on("click",function(e){
         $.get("/scrape",function(msg){
             if (msg === "Scrape Complete"){
@@ -50,5 +49,5 @@ $(document).ready(function(){
                 console.log(msg);
             }
         })
-    })
+    });
 })
